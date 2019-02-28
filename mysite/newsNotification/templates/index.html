@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load webpush_notifications %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Techcrunch Notifications</title>
+    {% webpush_header %}
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <h1>Hi {{ user.username }}!</h1>
+      <p><a href="{% url 'logout' %}">logout</a></p>
+    {% else %}
+      <p>You are not logged in</p>
+      <a href="{% url 'login' %}">login</a>
+        <a href="/newsNotification/signup/">sign up</a>
+    {% endif %}
+
+    <p>hello</p>
+    {% webpush_button %}
+
+    {% if user.is_authenticated %}
+        <form action="/newsNotification/newkeyword/" method="post">
+            {% csrf_token %}
+            <label for="kw">Enter Keyword: </label>
+            <input id="kw" type="text" name="inputkeyword">
+            <input type="submit" value="OK">
+        </form>
+        <form action="/newsNotification/removekeyword/" method="post">
+            {% csrf_token %}
+            <label for="rkw">Remove Keyword: </label>
+            <input id="rkw" type="text" name="deletekeyword">
+            <input type="submit" value="OK">
+        </form>
+        <br>
+        <h3>Your keywords:</h3>
+            <p>{{ currentKeywords }}</p>
+        <br>
+        <br>
+        {% for a in articlesAndWords reversed%}
+
+            <p>Article: <a href={{ a.0 }}>{{ a.0 }}</a>, matching words: {{ a.1 }}</p>
+            <br>
+
+        {% endfor %}
+    {% endif %}
+
+
+</body>
+</html>
